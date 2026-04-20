@@ -16,28 +16,22 @@
  */
 package de.flapdoodle.types;
 
-import org.immutables.value.Value;
-
 import java.util.function.Function;
 
-public abstract class Maybe<T> {
-	public abstract boolean hasSome();
+public sealed interface Maybe<T> permits Maybe.None, Maybe.Some {
+	boolean hasSome();
 	@Nullable
-	public abstract T get();
-	public abstract <R> Maybe<R> map(Function<T, R> mapping);
+	T get();
+	<R> Maybe<R> map(Function<T, R> mapping);
 
-	public T getOrThrow(IllegalArgumentException e) {
+	default T getOrThrow(IllegalArgumentException e) {
 		if (!hasSome()) throw e;
 		return get();
 	}
 
-	@Value.Immutable
-	public static abstract class Some<T> extends Maybe<T> {
-		@Value.Parameter
-		protected abstract @Nullable T value();
+	record Some<T>(@Nullable T value) implements Maybe<T> {
 
 		@Override
-		@Value.Auxiliary
 		public boolean hasSome() {
 			return true;
 		}
@@ -53,11 +47,9 @@ public abstract class Maybe<T> {
 		}
 	}
 
-	@Value.Immutable(singleton = true)
-	public static abstract class None<T> extends Maybe<T> {
+	record None<T>() implements Maybe<T> {
 
 		@Override
-		@Value.Auxiliary
 		public boolean hasSome() {
 			return false;
 		}
@@ -69,15 +61,15 @@ public abstract class Maybe<T> {
 
 		@Override
 		public <R> Maybe<R> map(Function<T, R> mapping) {
-			return Maybe.none();
+			return none();
 		}
 	}
 
-	public static <T> None<T> none() {
-		return ImmutableNone.of();
+	static <T> None<T> none() {
+		return new None<>();
 	}
 
-	public static <T> Some<T> some(@Nullable T value) {
-		return ImmutableSome.of(value);
+	static <T> Some<T> some(@Nullable T value) {
+		return new Some<>(value);
 	}
 }

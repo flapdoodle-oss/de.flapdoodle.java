@@ -275,7 +275,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                        	<source>8</source>
+                        	<source>17</source>
                             <doclint>none</doclint>
                         </configuration>
                     </execution>
@@ -440,6 +440,8 @@
         <junit.version>6.0.2</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
 
         <immutables.version>2.12.1</immutables.version>
         <!-- eclipse apt switch -->
