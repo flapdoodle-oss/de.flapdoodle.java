@@ -28,8 +28,20 @@ class HasherTest {
 	}
 
 	@Test
+	public void sha256HashAsFilename() {
+		String result = Hasher.instance().update("hello").hashAsUrl();
+		assertThat(result).isEqualTo("LPJNul-wow4m6DsqxbninhsWHlwfp0JecwQzYpOLmCQ");
+	}
+
+	@Test
 	public void md5Hash() {
 		String result = Hasher.md5Instance().update("hello").hashAsString();
 		assertThat(result).isEqualTo("5d41402abc4b2a76b9719d911017c592");
+	}
+
+	@Test
+	public void md5HashAsFilename() {
+		String result = Hasher.md5Instance().update("hello").hashAsUrl();
+		assertThat(result).isEqualTo("XUFAKrxLKna5cZ2REBfFkg");
 	}
 }

@@ -22,6 +22,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.Base64;
+import java.util.function.Function;
 
 public class Hasher {
 
@@ -49,9 +51,20 @@ public class Hasher {
 		digest.update(content);
 		return this;
 	}
-	
+
 	public String hashAsString() {
-		return byteArrayToHex(digest.digest());
+		return map(Hasher::byteArrayToHex);
+	}
+
+	public String hashAsUrl() {
+		return map(src -> new String(Base64.getUrlEncoder()
+			.withoutPadding()
+			.encode(src), StandardCharsets.UTF_8));
+	}
+
+	public <T> T map(Function<byte[], T> mapper) {
+		byte[] result = digest.digest();
+		return mapper.apply(result);
 	}
 
 	public static Hasher instance() {
